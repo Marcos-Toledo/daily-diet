@@ -1,12 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 import fastify from 'fastify';
+import { usersRoutes } from './routes/users';
 
 const app: FastifyInstance = fastify({
   logger: true
 })
 
-app.get('/', () => {
-  return 'Daily Diet API'
+app.register(usersRoutes, {
+  prefix: '/users'
 })
 
 try {
