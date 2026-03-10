@@ -23,6 +23,28 @@ export async function mealsRoutes(app: FastifyInstance) {
     return { meal }
   })
 
+  app.get('/summary', async (request) => {
+    const { user_id } = userParamsSchema.parse(request.query)
+    const meals = await knex('meals').where('user_id', user_id)
+    
+    const bestSequence = meals.reduce((acc, meal) => {
+      if (meal.within_diet === 1) {
+        acc.current++
+        acc.best = acc.current > acc.best ? acc.current : acc.best
+      } else {
+        acc.current = 0
+      }
+      return acc
+    }, { best: 0, current: 0 }).best
+
+    return {
+      total_meals: meals.length,
+      total_meals_in_diet: meals.filter(meal => meal.within_diet).length,
+      total_meals_out_of_diet: meals.filter(meal => !meal.within_diet).length,
+      best_sequence: bestSequence,
+    }
+  })
+
   app.post('/', async (request, replay) => {
     const { name, description, date, datetime, within_diet } = createMealBodySchema.parse(request.body)
     const { user_id } = userParamsSchema.parse(request.query)
