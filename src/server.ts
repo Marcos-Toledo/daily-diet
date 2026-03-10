@@ -1,6 +1,7 @@
-import type { FastifyInstance } from 'fastify';
-import fastify from 'fastify';
-import { usersRoutes } from './routes/users';
+import type { FastifyInstance } from 'fastify'
+import fastify from 'fastify'
+import { mealsRoutes } from './routes/meals'
+import { usersRoutes } from './routes/users'
 
 const app: FastifyInstance = fastify({
   logger: true
@@ -8,6 +9,10 @@ const app: FastifyInstance = fastify({
 
 app.register(usersRoutes, {
   prefix: '/users'
+})
+
+app.register(mealsRoutes, {
+  prefix: '/meals'
 })
 
 try {
