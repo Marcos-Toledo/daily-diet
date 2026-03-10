@@ -1,13 +1,7 @@
 import type { FastifyInstance } from "fastify"
 import { randomUUID } from "node:crypto"
-import { z } from 'zod'
-import { knex } from '../../package/knex'
-
-const createUserSchema = z.object({
-  name: z.string(),
-  email: z.email(),
-  avatar_url: z.string().optional(),
-})
+import { knex } from '../package/knex'
+import { createUserSchema } from '../schemas/users'
 
 export async function usersRoutes(app: FastifyInstance) {
   app.post('/', async (request, replay) => {
